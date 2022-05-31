@@ -1,4 +1,4 @@
-import { createSignal } from "solid-js";
+import { createEffect, createSignal } from "solid-js";
 import { styled } from "solid-styled-components";
 
 import barsSvg from "../assets/bars.svg";
@@ -8,17 +8,21 @@ const Container = styled("div")<{ supported: boolean | null }>`
   justify-content: center;
   align-items: center;
 
-  padding 0 0.5rem;
+  padding: 0 0.5rem;
 
-  background: var(${(props) => (props.supported ? "--nord14" : "--nord11")});
-`;
+  background: var(
+    ${(props) =>
+      props.supported === null
+        ? "--nord3"
+        : props.supported
+        ? "--nord14"
+        : "--nord11"}
+  );
 
-const Loading = styled("div")`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  background: var(--nord13);
+  img {
+    margin-right: 0.5rem;
+    height: 1.5rem;
+  }
 `;
 
 const Title = styled("h3")``;
@@ -56,15 +60,9 @@ export default function Drm({
     () => setSupported(false)
   );
 
-  if (supported === null) {
-    return (
-      <Loading>
-        <img src={barsSvg} />
-      </Loading>
-    );
-  }
   return (
     <Container supported={supported()}>
+      {supported() === null && <img src={barsSvg} />}
       <Title>{title}</Title>
     </Container>
   );
