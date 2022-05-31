@@ -53,7 +53,7 @@ const Grid = styled("div")`
 
 const Footer = styled("footer")`
   text-align: center;
-`
+`;
 
 function App() {
   return (
@@ -94,14 +94,16 @@ function App() {
         </GridWrapper>
         <GridWrapper>
           <h2>DRM</h2>
-          <Grid>
-            <Drm title="Google Widevine" keySystem="com.widevine.alpha" />
-            <Drm
-              title="Microsoft PlayReady"
-              keySystem="com.microsoft.playready"
-            />
-            <Drm title="Apple Fairplay" keySystem="com.apple.fps" />
-          </Grid>
+          <GridContainer>
+            <Grid>
+              <Drm title="Google Widevine" keySystem="com.widevine.alpha" />
+              <Drm
+                title="Microsoft PlayReady"
+                keySystem="com.microsoft.playready"
+              />
+              <Drm title="Apple Fairplay" keySystem="com.apple.fps" />
+            </Grid>
+          </GridContainer>
         </GridWrapper>
       </Container>
       <Footer>
