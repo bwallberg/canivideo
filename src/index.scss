@@ -1,0 +1,17 @@
+@import "./nord.css";
+
+@font-face {
+  font-family: "Norwester";
+  src: url("./assets/fonts/norwester.woff") format("woff"),
+       url("./assets/fonts/norwester.ttf") format("ttf");
+}
+
+
+body {
+  background: var(--nord0);
+  color: var(--nord4);
+  margin: 0;
+  font-family: 'Norwester';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
