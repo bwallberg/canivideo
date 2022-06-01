@@ -29,22 +29,6 @@ const GridWrapper = styled("section")`
   }
 `;
 
-const GridContainer = styled("section")`
-  display: flex;
-  flex-direction: column;
-  background: var(--nord3);
-  justify-content: center;
-
-  margin: 0.5rem;
-  padding: 0.5rem;
-
-  > h3,
-  h2 {
-    padding: 0;
-    margin: 0.5rem 0;
-  }
-`;
-
 const Grid = styled("div")`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -63,19 +47,13 @@ function App() {
       </Header>
       <Container>
         <GridWrapper>
-          <h2>MediaSource</h2>
-          <GridContainer>
-            <h3>Video codecs</h3>
-            <Grid>
-              <Codec title="h.264" codec='video/mp4; codecs="avc1.42E01E"' />
-              <Codec
-                title="h.265"
-                codec='video/mp4; codecs="hev1.1.6.L93.90"'
-              />
-            </Grid>
-          </GridContainer>
-          <GridContainer>
-            <h3>Audio codecs</h3>
+          <h2>Video codecs</h2>
+          <Grid>
+            <Codec title="h.264" codec='video/mp4; codecs="avc1.42E01E"' />
+            <Codec title="h.265" codec='video/mp4; codecs="hev1.1.6.L93.90"' />
+          </Grid>
+          <GridWrapper>
+            <h2>Audio codecs</h2>
             <Grid>
               <Codec
                 title="Advanced Audio Coding, AAC"
@@ -90,20 +68,18 @@ function App() {
                 codec='audio/mp4; codecs="ec-3"'
               />
             </Grid>
-          </GridContainer>
+          </GridWrapper>
         </GridWrapper>
         <GridWrapper>
           <h2>DRM</h2>
-          <GridContainer>
-            <Grid>
-              <Drm title="Google Widevine" keySystem="com.widevine.alpha" />
-              <Drm
-                title="Microsoft PlayReady"
-                keySystem="com.microsoft.playready"
-              />
-              <Drm title="Apple Fairplay" keySystem="com.apple.fps" />
-            </Grid>
-          </GridContainer>
+          <Grid>
+            <Drm title="Google Widevine" keySystem="com.widevine.alpha" />
+            <Drm
+              title="Microsoft PlayReady"
+              keySystem="com.microsoft.playready"
+            />
+            <Drm title="Apple Fairplay" keySystem="com.apple.fps" />
+          </Grid>
         </GridWrapper>
       </Container>
       <Footer>

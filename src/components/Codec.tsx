@@ -12,6 +12,15 @@ const Container = styled("div")<{ supported: boolean }>`
 
 const Title = styled("h3")``;
 
+const video = document.createElement("video");
+function isCodecSupported(codec: string) {
+  if (window.MediaSource) {
+    return window.MediaSource.isTypeSupported(codec);
+  } else {
+    return !!video.canPlayType(codec);
+  }
+}
+
 export default function Codec({
   title,
   codec,
@@ -19,7 +28,7 @@ export default function Codec({
   title: string;
   codec: string;
 }) {
-  const supported = MediaSource.isTypeSupported(codec);
+  const supported = isCodecSupported(codec);
   return (
     <Container supported={supported}>
       <Title>{title}</Title>
