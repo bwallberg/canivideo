@@ -49,8 +49,8 @@ function App() {
         <GridWrapper>
           <h2>Video codecs</h2>
           <Grid>
-            <Codec title="h.264" codec='video/mp4; codecs="avc1.42E01E"' />
-            <Codec title="h.265" codec='video/mp4; codecs="hev1.1.6.L93.90"' />
+            <Codec title="Advanced Video Coding, h.264" codec='video/mp4; codecs="avc1.42E01E"' />
+            <Codec title="High Efficiency Video Coding, h.265/HEVC" codec='video/mp4; codecs="hev1.1.6.L93.90"' />
           </Grid>
           <GridWrapper>
             <h2>Audio codecs</h2>
