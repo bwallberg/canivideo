@@ -62,23 +62,21 @@ function App() {
               codec='video/mp4; codecs="hev1.1.6.L93.90"'
             />
           </Grid>
-          <GridWrapper>
-            <h2>Audio codecs</h2>
-            <Grid>
-              <Codec
-                title="Advanced Audio Coding, AAC"
-                codec='audio/mp4; codecs="mp4a.40.2"'
-              />
-              <Codec
-                title="Dolby Digital, AC-3"
-                codec='audio/mp4; codecs="ac-3"'
-              />
-              <Codec
-                title="Dolby Digital Plus, EC-3"
-                codec='audio/mp4; codecs="ec-3"'
-              />
-            </Grid>
-          </GridWrapper>
+          <h2>Audio codecs</h2>
+          <Grid>
+            <Codec
+              title="Advanced Audio Coding, AAC"
+              codec='audio/mp4; codecs="mp4a.40.2"'
+            />
+            <Codec
+              title="Dolby Digital, AC-3"
+              codec='audio/mp4; codecs="ac-3"'
+            />
+            <Codec
+              title="Dolby Digital Plus, EC-3"
+              codec='audio/mp4; codecs="ec-3"'
+            />
+          </Grid>
         </GridWrapper>
         <GridWrapper>
           <h2>DRM</h2>
