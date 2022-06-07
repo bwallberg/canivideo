@@ -41,6 +41,11 @@ const Grid = styled("div")`
 
 const Footer = styled("footer")`
   text-align: center;
+
+  a {
+    font-weight: bold;
+    text-decoration: none;
+  }
 `;
 
 function App() {
@@ -88,7 +93,7 @@ function App() {
         </GridWrapper>
       </Container>
       <Footer>
-        <small>&copy; Copyright 2022, Benjamin Wallberg</small>
+        <small>by <a href="https://bwallberg.com" target="_blank">@bwallberg</a></small>
       </Footer>
     </Wrapper>
   );
