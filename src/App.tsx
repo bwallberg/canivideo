@@ -1,12 +1,16 @@
 import { styled } from "solid-styled-components";
 import Codec from "./components/Codec";
 import Drm from "./components/Drm";
+import { DrmType } from "./utils/drm";
 
 const Wrapper = styled("div")``;
 
 const Container = styled("div")`
   display: grid;
   grid-template-columns: 1fr 1fr;
+  @media only screen and (max-width: 992px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const Header = styled("header")`
@@ -49,8 +53,14 @@ function App() {
         <GridWrapper>
           <h2>Video codecs</h2>
           <Grid>
-            <Codec title="Advanced Video Coding, h.264" codec='video/mp4; codecs="avc1.42E01E"' />
-            <Codec title="High Efficiency Video Coding, h.265/HEVC" codec='video/mp4; codecs="hev1.1.6.L93.90"' />
+            <Codec
+              title="Advanced Video Coding, h.264"
+              codec='video/mp4; codecs="avc1.42E01E"'
+            />
+            <Codec
+              title="High Efficiency Video Coding, h.265/HEVC"
+              codec='video/mp4; codecs="hev1.1.6.L93.90"'
+            />
           </Grid>
           <GridWrapper>
             <h2>Audio codecs</h2>
@@ -73,12 +83,9 @@ function App() {
         <GridWrapper>
           <h2>DRM</h2>
           <Grid>
-            <Drm title="Google Widevine" keySystem="com.widevine.alpha" />
-            <Drm
-              title="Microsoft PlayReady"
-              keySystem="com.microsoft.playready"
-            />
-            <Drm title="Apple Fairplay" keySystem="com.apple.fps" />
+            <Drm type={DrmType.WIDEVINE} />
+            <Drm type={DrmType.PLAYREADY} />
+            <Drm type={DrmType.FAIRPLAY} />
           </Grid>
         </GridWrapper>
       </Container>

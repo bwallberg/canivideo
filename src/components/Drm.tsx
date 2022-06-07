@@ -1,69 +1,41 @@
-import { createEffect, createSignal } from "solid-js";
+import { createSignal, For } from "solid-js";
 import { styled } from "solid-styled-components";
+import { DrmType, getDrm, IDrm, NameMap } from "../utils/drm";
 
-import barsSvg from "../assets/bars.svg";
+import SupportCard from "./SupportCard";
 
-const Container = styled("div")<{ supported: boolean | null }>`
+const Container = styled("div")`
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+`;
 
-  padding: 0 0.5rem;
-
-  background: var(
-    ${(props) =>
-      props.supported === null
-        ? "--nord3"
-        : props.supported
-        ? "--nord14"
-        : "--nord11"}
-  );
-
-  img {
-    margin-right: 0.5rem;
-    height: 1.5rem;
+const RobustnessContainer = styled("div")`
+  display: flex;
+  flex-direction: row;
+  > * {
+    width: 100%;
+    font-size: 0.75em;
   }
 `;
 
-const Title = styled("h3")``;
+export default function Drm({ type }: { type: DrmType }) {
+  const [drm, setDrm] = createSignal<IDrm | null>(null);
 
-function isKeySystemSupported(keySystem: string) {
-  if (navigator.requestMediaKeySystemAccess) {
-    return navigator
-      .requestMediaKeySystemAccess(keySystem, [
-        {
-          initDataTypes: ["cenc"],
-          videoCapabilities: [
-            {
-              contentType: 'video/mp4; codecs="avc1.42E01E"',
-            },
-          ],
-        },
-      ])
-      .then((access) => access.createMediaKeys());
-  } else {
-    return Promise.reject();
-  }
-}
-
-export default function Drm({
-  title,
-  keySystem,
-}: {
-  title: string;
-  keySystem: string;
-}) {
-  const [supported, setSupported] = createSignal<boolean | null>(null);
-
-  isKeySystemSupported(keySystem).then(
-    () => setSupported(true),
-    () => setSupported(false)
-  );
+  getDrm(type).then((drm) => setDrm(drm))
 
   return (
-    <Container supported={supported()}>
-      {supported() === null && <img src={barsSvg} />}
-      <Title>{title}</Title>
+    <Container>
+      <SupportCard title={NameMap[type]} supported={drm()?.supported ?? null} />
+      <RobustnessContainer>
+        <For each={drm()?.securityLevels}>
+          {(securityLevel) => (
+            <SupportCard
+              title={securityLevel.name}
+              supported={securityLevel.supported}
+            />
+          )}
+        </For>
+      </RobustnessContainer>
     </Container>
   );
 }
