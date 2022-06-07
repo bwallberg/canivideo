@@ -106,7 +106,7 @@ async function getPlayready(): Promise<IDrm> {
   return {
     type: DrmType.PLAYREADY,
     keySystem: KeySystem.PLAYREADY,
-    supported: await isKeySystemSupported(KeySystem.WIDEVINE),
+    supported: await isKeySystemSupported(KeySystem.PLAYREADY),
     securityLevels,
   };
 }
