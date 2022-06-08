@@ -9,9 +9,12 @@ const Container = styled("div")`
   flex-direction: column;
 `;
 
-const RobustnessContainer = styled("div")`
+const SecurityLevels = styled("div")`
   display: flex;
   flex-direction: row;
+  gap: 0.1rem;
+  margin-top: 0.1rem;
+
   > * {
     width: 100%;
     font-size: 0.75em;
@@ -26,7 +29,7 @@ export default function Drm({ type }: { type: DrmType }) {
   return (
     <Container>
       <SupportCard title={NameMap[type]} supported={drm()?.supported ?? null} />
-      <RobustnessContainer>
+      <SecurityLevels>
         <For each={drm()?.securityLevels}>
           {(securityLevel) => (
             <SupportCard
@@ -35,7 +38,7 @@ export default function Drm({ type }: { type: DrmType }) {
             />
           )}
         </For>
-      </RobustnessContainer>
+      </SecurityLevels>
     </Container>
   );
 }
