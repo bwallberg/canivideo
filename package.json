@@ -1,5 +1,6 @@
 {
-  "name": "vite-template-solid",
+  "private": true,
+  "name": "canivideo",
   "version": "0.0.0",
   "description": "",
   "scripts": {

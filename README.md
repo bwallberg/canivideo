@@ -1,14 +1,16 @@
-## Usage
+# Can I Video?
 
-Those templates dependencies are maintained via [pnpm](https://pnpm.io) via `pnpm up -Lri`.
+It's live! ✅ [https://canivideo.com](https://canivideo.com/)
 
-This is the reason you see a `pnpm-lock.yaml`. That being said, any package manager will work. This file can be safely be removed once you clone a template.
+A simple website that detects what video codes & drms your browser is able to utilize.
+
+## Development
+
+The website is my first go at building something with [solid.js](https://solidjs.com/)
 
 ```bash
 $ npm install # or pnpm install or yarn install
 ```
-
-### Learn more on the [Solid Website](https://solidjs.com) and come chat with us on our [Discord](https://discord.com/invite/solidjs)
 
 ## Available Scripts
 
