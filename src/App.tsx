@@ -39,6 +39,10 @@ const Grid = styled("div")`
   gap: 0.25rem;
 `;
 
+const Footnote = styled("p")`
+  font-style: italic;
+`
+
 const Footer = styled("footer")`
   text-align: center;
 
@@ -63,8 +67,24 @@ function App() {
               codec='video/mp4; codecs="avc1.42E01E"'
             />
             <Codec
-              title="High Efficiency Video Coding, h.265/HEVC"
+              title="High Efficiency Video Coding, h.265/HEVC | hvc1"
+              codec='video/mp4; codecs="hvc1.1.6.L93.90"'
+            />
+            <Codec
+              title="High Efficiency Video Coding, h.265/HEVC | hev1"
               codec='video/mp4; codecs="hev1.1.6.L93.90"'
+            />
+            <Codec
+              title="AOMedia Video 1, AV1 | 8 bits"
+              codec='video/mp4; codecs="av01.0.00M.08"'
+            />
+            <Codec
+              title="AOMedia Video 1, AV1 | 10 bits"
+              codec='video/mp4; codecs="av01.0.00M.10"'
+            />
+            <Codec
+              title="AOMedia Video 1, AV1 | 12 bits"
+              codec='video/mp4; codecs="av01.0.00M.12"'
             />
           </Grid>
           <h2>Audio codecs</h2>
@@ -82,6 +102,7 @@ function App() {
               codec='audio/mp4; codecs="ec-3"'
             />
           </Grid>
+          <Footnote>Note! Only a single test is performed per codec, basic functionality should exist if green but different profiles/levels might not be supported. </Footnote>
         </GridWrapper>
         <GridWrapper>
           <h2>DRM</h2>
