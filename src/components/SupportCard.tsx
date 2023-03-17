@@ -24,7 +24,9 @@ const Container = styled("div")<{ supported: boolean | null }>`
   }
 `;
 
-export const Title = styled("h3")``;
+export const Title = styled("h3")`
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+`;
 
 export default function SupportCard(props: {
   title: string;

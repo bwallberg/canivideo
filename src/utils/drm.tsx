@@ -28,7 +28,11 @@ export interface IDrm {
   securityLevels: SecurityLevel[];
 }
 
-function isKeySystemSupported(keySystem: KeySystem, robustness: string = "") {
+function isKeySystemSupported(
+  keySystem: KeySystem,
+  contentType: string,
+  robustness: string = "",
+) {
   if (navigator.requestMediaKeySystemAccess) {
     return navigator
       .requestMediaKeySystemAccess(keySystem, [
@@ -36,7 +40,7 @@ function isKeySystemSupported(keySystem: KeySystem, robustness: string = "") {
           initDataTypes: ["cenc"],
           videoCapabilities: [
             {
-              contentType: 'video/mp4; codecs="avc1.42E01E"',
+              contentType,
               robustness,
             },
           ],
@@ -50,7 +54,7 @@ function isKeySystemSupported(keySystem: KeySystem, robustness: string = "") {
   }
 }
 
-async function getWidevine(): Promise<IDrm> {
+async function getWidevine(contentType: string): Promise<IDrm> {
   const supportedRobustness = (
     await Promise.all(
       [
@@ -60,8 +64,8 @@ async function getWidevine(): Promise<IDrm> {
         "SW_SECURE_DECODE",
         "SW_SECURE_CRYPTO",
       ].map((robustness) =>
-        isKeySystemSupported(KeySystem.WIDEVINE, robustness).then((supported) =>
-          supported ? robustness : null
+        isKeySystemSupported(KeySystem.WIDEVINE, contentType, robustness).then(
+          (supported) => (supported ? robustness : null)
         )
       )
     )
@@ -70,7 +74,7 @@ async function getWidevine(): Promise<IDrm> {
   return {
     type: DrmType.WIDEVINE,
     keySystem: KeySystem.WIDEVINE,
-    supported: await isKeySystemSupported(KeySystem.WIDEVINE),
+    supported: await isKeySystemSupported(KeySystem.WIDEVINE, contentType),
     securityLevels: [
       {
         name: "L1",
@@ -88,7 +92,7 @@ async function getWidevine(): Promise<IDrm> {
   };
 }
 
-async function getPlayready(): Promise<IDrm> {
+async function getPlayready(contentType: string): Promise<IDrm> {
   const securityLevels: SecurityLevel[] = [];
   const promises: Promise<any>[] = [];
   ["3000", "2000", "150"].forEach((level) => {
@@ -106,27 +110,27 @@ async function getPlayready(): Promise<IDrm> {
   return {
     type: DrmType.PLAYREADY,
     keySystem: KeySystem.PLAYREADY,
-    supported: await isKeySystemSupported(KeySystem.PLAYREADY),
+    supported: await isKeySystemSupported(KeySystem.PLAYREADY, contentType),
     securityLevels,
   };
 }
 
-async function getFairplay(): Promise<IDrm> {
+async function getFairplay(contentType: string): Promise<IDrm> {
   return {
     type: DrmType.WIDEVINE,
     keySystem: KeySystem.WIDEVINE,
-    supported: await isKeySystemSupported(KeySystem.FAIRPLAY),
+    supported: await isKeySystemSupported(KeySystem.FAIRPLAY, contentType),
     securityLevels: [],
   };
 }
 
-export function getDrm(type: DrmType): Promise<IDrm> {
+export function getDrm(type: DrmType, contentType: string): Promise<IDrm> {
   switch (type) {
     case DrmType.WIDEVINE:
-      return getWidevine();
+      return getWidevine(contentType);
     case DrmType.PLAYREADY:
-      return getPlayready();
+      return getPlayready(contentType);
     case DrmType.FAIRPLAY:
-      return getFairplay();
+      return getFairplay(contentType);
   }
 }

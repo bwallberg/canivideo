@@ -1,12 +1,18 @@
 import { styled } from "solid-styled-components";
+import { DrmType } from "../utils/drm";
+import Drm from "./Drm";
 import SupportCard from "./SupportCard";
+
+const Wrapper = styled("div")``;
 
 const Container = styled("div")`
   display: flex;
   flex-direction: column;
+
+  overflow: hidden;
 `;
 
-const Apis = styled("div")`
+const Children = styled("div")`
   display: flex;
   flex-direction: row;
   gap: 0.1rem;
@@ -28,20 +34,35 @@ function isCodecSupported(codec: string): { mse: boolean; video: boolean } {
 
 export default function Codec({
   title,
-  codec,
+  contentType,
+  drm = true,
 }: {
   title: string;
-  codec: string;
+  contentType: string;
+  drm?: boolean;
 }) {
-  const { mse, video } = isCodecSupported(codec);
+  const { mse, video } = isCodecSupported(contentType);
+
+  const supported: boolean = !!mse || !!video;
 
   return (
-    <Container>
-      <SupportCard title={title} supported={mse || video} />
-      <Apis>
-        <SupportCard title={"MSE"} supported={mse} />
-        <SupportCard title={"<video />"} supported={video} />
-      </Apis>
-    </Container>
+    <Wrapper>
+      <Container>
+        <SupportCard title={title} supported={supported} />
+        {supported && (
+          <Children>
+            <SupportCard title={"MSE"} supported={mse} />
+            <SupportCard title={"<video />"} supported={video} />
+          </Children>
+        )}
+        {supported && drm && (
+          <Children>
+            <Drm type={DrmType.WIDEVINE} contentType={contentType} />
+            <Drm type={DrmType.PLAYREADY} contentType={contentType} />
+            <Drm type={DrmType.FAIRPLAY} contentType={contentType} />
+          </Children>
+        )}
+      </Container>
+    </Wrapper>
   );
 }

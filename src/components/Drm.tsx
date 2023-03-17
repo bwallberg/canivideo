@@ -21,24 +21,32 @@ const SecurityLevels = styled("div")`
   }
 `;
 
-export default function Drm({ type }: { type: DrmType }) {
+export default function Drm({
+  type,
+  contentType,
+}: {
+  type: DrmType;
+  contentType: string;
+}) {
   const [drm, setDrm] = createSignal<IDrm | null>(null);
 
-  getDrm(type).then((drm) => setDrm(drm))
+  getDrm(type, contentType).then((drm) => setDrm(drm));
 
   return (
     <Container>
       <SupportCard title={NameMap[type]} supported={drm()?.supported ?? null} />
-      <SecurityLevels>
-        <For each={drm()?.securityLevels}>
-          {(securityLevel) => (
-            <SupportCard
-              title={securityLevel.name}
-              supported={securityLevel.supported}
-            />
-          )}
-        </For>
-      </SecurityLevels>
+      {drm()?.supported && (
+        <SecurityLevels>
+          <For each={drm()?.securityLevels}>
+            {(securityLevel) => (
+              <SupportCard
+                title={securityLevel.name}
+                supported={securityLevel.supported}
+              />
+            )}
+          </For>
+        </SecurityLevels>
+      )}
     </Container>
   );
 }
