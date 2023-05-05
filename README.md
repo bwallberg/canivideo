@@ -2,7 +2,7 @@
 
 It's live! ✅ [https://canivideo.com](https://canivideo.com/)
 
-A simple website that detects what video codes & drms your browser is able to utilize.
+A simple website that detects what video codecs & drms your browser is able to utilize.
 
 ## Development
 
