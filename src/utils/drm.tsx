@@ -96,7 +96,7 @@ async function getPlayready(contentType: string): Promise<IDrm> {
   const securityLevels: SecurityLevel[] = [];
   const promises: Promise<any>[] = [];
   ["3000", "2000", "150"].forEach((level) => {
-    const promise = isKeySystemSupported(KeySystem.PLAYREADY, level).then(
+    const promise = isKeySystemSupported(KeySystem.PLAYREADY, contentType, level).then(
       (supported) => {
         securityLevels.push({
           name: level,
