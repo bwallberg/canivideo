@@ -26,28 +26,38 @@ export const NameMap = {
   [DrmType.FAIRPLAY]: "Apple FairPlay",
 };
 
+type EncryptionScheme = "cenc" | "cbcs" | "cbcs-1-9";
+
+const EncryptionSchemes: EncryptionScheme[] = ["cenc", "cbcs", "cbcs-1-9"];
+
 export type SecurityLevel = {
   name: string;
+  supported: boolean;
+};
+
+export type SupportedEncryption = {
+  name: EncryptionScheme;
   supported: boolean;
 };
 
 export interface IDrm {
   type: DrmType;
   keySystem: KeySystem;
-  supported: boolean;
+  supportedEncryptions: SupportedEncryption[];
   securityLevels: SecurityLevel[];
 }
 
 function isKeySystemSupported(
   keySystem: KeySystem,
   contentType: string,
+  initDataType: EncryptionScheme,
   robustness: string = "",
 ) {
   if (navigator.requestMediaKeySystemAccess) {
     return navigator
       .requestMediaKeySystemAccess(keySystem, [
         {
-          initDataTypes: ["cenc"],
+          initDataTypes: [initDataType],
           videoCapabilities: [
             {
               contentType,
@@ -74,17 +84,31 @@ async function getWidevine(contentType: string): Promise<IDrm> {
         "SW_SECURE_DECODE",
         "SW_SECURE_CRYPTO",
       ].map((robustness) =>
-        isKeySystemSupported(KeySystem.WIDEVINE, contentType, robustness).then(
-          (supported) => (supported ? robustness : null),
-        ),
+        isKeySystemSupported(
+          KeySystem.WIDEVINE,
+          contentType,
+          "cenc",
+          robustness,
+        ).then((supported) => (supported ? robustness : null)),
       ),
     )
   ).filter((robustness) => !!robustness);
 
+  const supportedEncryptions = await Promise.all(
+    EncryptionSchemes.map(async (encryption) => ({
+      name: encryption,
+      supported: await isKeySystemSupported(
+        KeySystem.WIDEVINE,
+        contentType,
+        encryption,
+      ),
+    })),
+  );
+
   return {
     type: DrmType.WIDEVINE,
     keySystem: KeySystem.WIDEVINE,
-    supported: await isKeySystemSupported(KeySystem.WIDEVINE, contentType),
+    supportedEncryptions,
     securityLevels: [
       {
         name: "L1",
@@ -109,30 +133,52 @@ async function getPlayready(
   const securityLevels: SecurityLevel[] = [];
   const promises: Promise<any>[] = [];
   ["3000", "2000", "150"].forEach((level) => {
-    const promise = isKeySystemSupported(keySystem, contentType, level).then(
-      (supported) => {
-        securityLevels.push({
-          name: level,
-          supported,
-        });
-      },
-    );
+    const promise = isKeySystemSupported(
+      keySystem,
+      contentType,
+      "cenc",
+      level,
+    ).then((supported) => {
+      securityLevels.push({
+        name: level,
+        supported,
+      });
+    });
     promises.push(promise);
   });
   await Promise.allSettled(promises);
+
+  const supportedEncryptions = await Promise.all(
+    EncryptionSchemes.map(async (encryption) => ({
+      name: encryption,
+      supported: await isKeySystemSupported(keySystem, contentType, encryption),
+    })),
+  );
+
   return {
     type: KeySystemDrmTypeMap[keySystem],
     keySystem: keySystem,
-    supported: await isKeySystemSupported(keySystem, contentType),
+    supportedEncryptions,
     securityLevels,
   };
 }
 
 async function getFairplay(contentType: string): Promise<IDrm> {
+  const supportedEncryptions = await Promise.all(
+    EncryptionSchemes.map(async (encryption) => ({
+      name: encryption,
+      supported: await isKeySystemSupported(
+        KeySystem.FAIRPLAY,
+        contentType,
+        encryption,
+      ),
+    })),
+  );
+
   return {
     type: DrmType.WIDEVINE,
     keySystem: KeySystem.FAIRPLAY,
-    supported: await isKeySystemSupported(KeySystem.FAIRPLAY, contentType),
+    supportedEncryptions,
     securityLevels: [],
   };
 }

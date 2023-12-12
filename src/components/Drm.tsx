@@ -9,7 +9,7 @@ const Container = styled("div")`
   flex-direction: column;
 `;
 
-const SecurityLevels = styled("div")`
+const Options = styled("div")`
   display: flex;
   flex-direction: row;
   gap: 0.1rem;
@@ -32,11 +32,28 @@ export default function Drm({
 
   getDrm(type, contentType).then((drm) => setDrm(drm));
 
+  const supported = () => {
+    const _drm = drm();
+    return _drm
+      ? _drm.supportedEncryptions.some((encryption) => encryption.supported)
+      : null;
+  };
+
   return (
     <Container>
-      <SupportCard title={NameMap[type]} supported={drm()?.supported ?? null} />
-      {drm()?.supported && (
-        <SecurityLevels>
+      <SupportCard title={NameMap[type]} supported={supported()} />
+      <Options>
+        <For each={drm()?.supportedEncryptions}>
+          {(encryption) => (
+            <SupportCard
+              title={encryption.name}
+              supported={encryption.supported}
+            />
+          )}
+        </For>
+      </Options>
+      {supported() && (
+        <Options>
           <For each={drm()?.securityLevels}>
             {(securityLevel) => (
               <SupportCard
@@ -45,7 +62,7 @@ export default function Drm({
               />
             )}
           </For>
-        </SecurityLevels>
+        </Options>
       )}
     </Container>
   );
