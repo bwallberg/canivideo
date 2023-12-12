@@ -59,6 +59,7 @@ export default function Codec({
           <Children>
             <Drm type={DrmType.WIDEVINE} contentType={contentType} />
             <Drm type={DrmType.PLAYREADY} contentType={contentType} />
+            <Drm type={DrmType.PLAYREADY_LEGACY} contentType={contentType} />
             <Drm type={DrmType.FAIRPLAY} contentType={contentType} />
           </Children>
         )}
