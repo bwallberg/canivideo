@@ -12,6 +12,29 @@ export enum KeySystem {
   FAIRPLAY = "com.apple.fps",
 }
 
+type HDCP_VERSION =
+  | "1.0"
+  | "1.1"
+  | "1.2"
+  | "1.3"
+  | "1.4"
+  | "2.0"
+  | "2.1"
+  | "2.2"
+  | "2.3";
+
+const HDCP_VERSIONS: HDCP_VERSION[] = [
+  "1.0",
+  "1.1",
+  "1.2",
+  "1.3",
+  "1.4",
+  "2.0",
+  "2.1",
+  "2.2",
+  "2.3",
+];
+
 export const KeySystemDrmTypeMap = {
   [KeySystem.WIDEVINE]: DrmType.WIDEVINE,
   [KeySystem.PLAYREADY_LEGACY]: DrmType.PLAYREADY_LEGACY,
@@ -45,13 +68,28 @@ export interface IDrm {
   keySystem: KeySystem;
   supportedEncryptions: SupportedEncryption[];
   securityLevels: SecurityLevel[];
+  hdcpSupport: string;
+}
+
+function isMinHdcpVersionSupported(
+  mediaKeys: MediaKeys,
+  minHdcpVersion: HDCP_VERSION
+): Promise<string> {
+  if (!("getStatusForPolicy" in mediaKeys)) {
+    return Promise.resolve("unknown");
+  }
+
+  // @ts-ignore
+  return mediaKeys
+    .getStatusForPolicy({ minHdcpVersion })
+    .catch(() => "unsupported");
 }
 
 function isKeySystemSupported(
   keySystem: KeySystem,
   contentType: string,
   initDataType: EncryptionScheme,
-  robustness: string = "",
+  robustness: string = ""
 ) {
   if (navigator.requestMediaKeySystemAccess) {
     return navigator
@@ -67,8 +105,18 @@ function isKeySystemSupported(
         },
       ])
       .then((access) => access.createMediaKeys())
-      .then(() => true)
-      .catch(() => false);
+      .then(async (mediaKeys) => ({
+        supported: true,
+        hdcpSupport: await Promise.all(
+          HDCP_VERSIONS.map(
+            async (version) =>
+              await isMinHdcpVersionSupported(mediaKeys, version).then(
+                (result) => `${version}: ${result}`
+              )
+          )
+        ),
+      }))
+      .catch(() => ({ supported: false, hdcpSupport: [] }));
   } else {
     return Promise.reject();
   }
@@ -88,27 +136,34 @@ async function getWidevine(contentType: string): Promise<IDrm> {
           KeySystem.WIDEVINE,
           contentType,
           "cenc",
-          robustness,
-        ).then((supported) => (supported ? robustness : null)),
-      ),
+          robustness
+        ).then(({ supported }) => (supported ? robustness : null))
+      )
     )
   ).filter((robustness) => !!robustness);
 
   const supportedEncryptions = await Promise.all(
     EncryptionSchemes.map(async (encryption) => ({
       name: encryption,
-      supported: await isKeySystemSupported(
-        KeySystem.WIDEVINE,
-        contentType,
-        encryption,
-      ),
-    })),
+      supported: (
+        await isKeySystemSupported(KeySystem.WIDEVINE, contentType, encryption)
+      ).supported,
+    }))
   );
+
+  const hdcpSupport = (
+    await isKeySystemSupported(KeySystem.WIDEVINE, contentType, "cenc").then(
+      ({ hdcpSupport }) => hdcpSupport
+    )
+  ).join(",");
+  
+  console.log("bwallberg", hdcpSupport)
 
   return {
     type: DrmType.WIDEVINE,
     keySystem: KeySystem.WIDEVINE,
     supportedEncryptions,
+    hdcpSupport,
     securityLevels: [
       {
         name: "L1",
@@ -128,7 +183,7 @@ async function getWidevine(contentType: string): Promise<IDrm> {
 
 async function getPlayready(
   contentType: string,
-  keySystem: KeySystem.PLAYREADY | KeySystem.PLAYREADY_LEGACY,
+  keySystem: KeySystem.PLAYREADY | KeySystem.PLAYREADY_LEGACY
 ): Promise<IDrm> {
   const securityLevels: SecurityLevel[] = [];
   const promises: Promise<any>[] = [];
@@ -137,7 +192,7 @@ async function getPlayready(
       keySystem,
       contentType,
       "cenc",
-      level,
+      level
     ).then((supported) => {
       securityLevels.push({
         name: level,
@@ -152,7 +207,7 @@ async function getPlayready(
     EncryptionSchemes.map(async (encryption) => ({
       name: encryption,
       supported: await isKeySystemSupported(keySystem, contentType, encryption),
-    })),
+    }))
   );
 
   return {
@@ -170,9 +225,9 @@ async function getFairplay(contentType: string): Promise<IDrm> {
       supported: await isKeySystemSupported(
         KeySystem.FAIRPLAY,
         contentType,
-        encryption,
+        encryption
       ),
-    })),
+    }))
   );
 
   return {
