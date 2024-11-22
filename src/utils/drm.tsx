@@ -50,18 +50,19 @@ export interface IDrm {
 function isKeySystemSupported(
   keySystem: KeySystem,
   contentType: string,
-  initDataType: EncryptionScheme,
+  encryptionScheme: EncryptionScheme,
   robustness: string = "",
 ) {
   if (navigator.requestMediaKeySystemAccess) {
     return navigator
       .requestMediaKeySystemAccess(keySystem, [
         {
-          initDataTypes: [initDataType],
+          initDataTypes: ['cenc', 'sinf', 'skd', 'keyids'],
           videoCapabilities: [
             {
               contentType,
               robustness,
+              encryptionScheme
             },
           ],
         },
