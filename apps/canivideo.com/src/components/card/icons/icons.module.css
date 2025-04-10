@@ -1,0 +1,11 @@
+.unknown {
+    color: var(--nord8);
+}
+
+.supported {
+    color: var(--nord14);
+}
+
+.not-supported {
+    color: var(--nord11);
+}

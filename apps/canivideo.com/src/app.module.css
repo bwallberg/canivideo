@@ -1,0 +1,41 @@
+.app {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.header {
+    font-weight: bold;
+    text-align: center;
+    top: 0;
+    width: 100%;
+}
+
+.main {
+    width: 90%;
+    max-width: 60rem;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    > * {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        width: 100%;
+    }
+}
+
+.footer {
+    padding: 2rem 0;
+    width: 100%;
+
+    text-align: center;
+
+    a {
+        font-weight: bold;
+    }
+}

@@ -1,24 +1,12 @@
 {
   "private": true,
-  "name": "canivideo",
-  "version": "0.0.0",
-  "description": "",
+  "name": "canivideo-workspace",
   "scripts": {
-    "start": "vite",
-    "dev": "vite --host 0.0.0.0 --https",
-    "build": "vite build",
-    "serve": "vite preview"
+    "dev": "pnpm -F canivideo.com dev",
+    "build": "pnpm -r build"
   },
+  "keywords": [],
+  "author": "Benjamin Wallberg",
   "license": "MIT",
-  "devDependencies": {
-    "prettier": "^2.6.2",
-    "sass": "^1.52.1",
-    "typescript": "^5.3.0",
-    "vite": "^2.9.9",
-    "vite-plugin-solid": "^2.2.6"
-  },
-  "dependencies": {
-    "solid-js": "^1.4.2",
-    "solid-styled-components": "^0.28.1"
-  }
+  "packageManager": "pnpm@10.7.1"
 }

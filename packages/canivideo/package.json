@@ -1,0 +1,22 @@
+{
+  "name": "canivideo",
+  "version": "1.0.0",
+  "description": "",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "Benjamin Wallberg",
+  "license": "MIT",
+  "packageManager": "pnpm@10.7.1",
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}
