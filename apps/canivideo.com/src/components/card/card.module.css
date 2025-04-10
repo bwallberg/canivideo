@@ -1,0 +1,54 @@
+.card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+
+    border: 0.1rem solid var(--nord4);
+    border-radius: 0.6rem;
+
+    transition: background-color 0.2s ease-in-out;
+
+    &:hover {
+        cursor: pointer;
+        background-color: var(--nord1);
+    }
+}
+
+.support-types {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1;
+
+    padding: 0.6rem;
+
+    &:first-child {
+        border-right: 0.1rem solid var(--nord4);
+    }
+}
+
+.label {
+    font-weight: bold;
+}
+
+.dialog {
+    cursor: pointer;
+
+    height: 85%;
+    width: 85%;
+    max-width: 40rem;
+    padding: 1rem;
+
+    color: var(--nord0);
+    background-color: var(--nord6);
+
+    border: 0.1rem solid var(--nord4);
+    border-radius: 0.6rem;
+
+    box-shadow: 0 0.4rem 0.8rem rgba(0, 0, 0, 0.1);
+
+    &::backdrop {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+}
