@@ -1,44 +1,38 @@
-import { isCodecSupported } from "./codec";
-import { Container, EncryptionScheme } from "./types";
+import { getContentType, isCodecSupported } from "./codec";
+import { isDrmSupported } from "./drm";
+import { Container, Drm, EncryptionScheme, KeySystem, Result } from "./types";
 
 export * from "./types";
 
-const DefaultEncryptionsSchemes: EncryptionScheme[] = [
-  "cenc",
-  "cbcs",
-  "cbcs-1-9",
-];
-
 type CanivideoOptions = {
   container: Container;
+  drm: Drm[];
   codecs: string[];
   /**
-   * Strict - if true all provided properties must be supported for result.supported to be true
+   * Strict - if true all provided codecs must be supported for result.supported to be true
    */
   strict: boolean;
 };
 
-export type Result = {
-  supported: boolean;
-  codecs: {
-    [key: string]: {
-      mse: boolean;
-      htmlVideoElement: boolean;
-    };
-  };
-};
-
 export async function canivideo(options: CanivideoOptions): Promise<Result> {
-  const result = {
+  const result: Result = {
     supported: false,
     codecs: {},
   };
   for (const codec of options.codecs) {
-    const { mse, htmlVideoElement } = isCodecSupported(
+    const api = isCodecSupported(
       options.container,
-      codec,
+      codec
     );
-    result.codecs[codec] = { mse, htmlVideoElement };
+    const drm = await Promise.all(
+      options.drm.map((drm) =>
+        isDrmSupported(drm, getContentType(options.container, codec))
+      )
+    );
+    result.codecs[codec] = {
+      api,
+      drm
+    };
   }
 
   return result;

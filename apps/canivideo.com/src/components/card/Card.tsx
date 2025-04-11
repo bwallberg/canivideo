@@ -4,10 +4,11 @@ import { NotSupported, Supported, Unknown } from "./icons/icons";
 
 type CardProps = {
   header: string;
-  supported?: boolean;
+  supportedCodec?: boolean;
+  supportedDrm?: boolean;
 };
 
-export function Card({ header, supported }: CardProps) {
+export function Card({ header, supportedCodec, supportedDrm }: CardProps) {
   const modalRef = useRef<HTMLDialogElement>();
 
   useEffect(() => {
@@ -30,9 +31,9 @@ export function Card({ header, supported }: CardProps) {
         <div className={styles.supportTypes}>
           <span className={styles.label}>{header}</span>
           <span className={styles.support}>
-            {supported === undefined ? (
+            {supportedCodec === undefined ? (
               <Unknown />
-            ) : supported ? (
+            ) : supportedCodec ? (
               <Supported />
             ) : (
               <NotSupported />
@@ -42,9 +43,9 @@ export function Card({ header, supported }: CardProps) {
         <div className={styles.supportTypes}>
           <span className={styles.label}>DRM</span>
           <span className={styles.support}>
-            {supported === undefined ? (
+            {supportedDrm === undefined ? (
               <Unknown />
-            ) : supported ? (
+            ) : supportedDrm ? (
               <Supported />
             ) : (
               <NotSupported />
@@ -64,11 +65,11 @@ export function Card({ header, supported }: CardProps) {
           <tbody>
             <tr>
               <td>Widevine</td>
-              <td>{supported ? "Yes" : "No"}</td>
+              <td>{supportedDrm ? "Yes" : "No"}</td>
             </tr>
             <tr>
               <td>PlayReady</td>
-              <td>{supported ? "Yes" : "No"}</td>
+              <td>{supportedDrm ? "Yes" : "No"}</td>
             </tr>
           </tbody>
         </table>
