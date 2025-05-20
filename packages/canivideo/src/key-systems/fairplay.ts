@@ -13,10 +13,11 @@ export async function isFairplaySupported({
   const supported = await isKeySystemSupported(
     "com.apple.fps",
     contentType,
-    encryption
+    encryption,
   );
 
   return {
+    keySystem: "com.apple.fps",
     supported,
     securityLevels: [],
   };

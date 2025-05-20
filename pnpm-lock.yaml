@@ -6,6 +6,8 @@ settings:
 
 importers:
 
+  .: {}
+
   apps/canivideo.com:
     dependencies:
       '@preact/signals':
@@ -34,7 +36,11 @@ importers:
         specifier: ^6.0.4
         version: 6.2.5
 
-  packages/canivideo: {}
+  packages/canivideo:
+    devDependencies:
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
 
 packages:
 

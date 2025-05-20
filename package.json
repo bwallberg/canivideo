@@ -2,7 +2,8 @@
   "private": true,
   "name": "canivideo-workspace",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "pnpm -F canivideo.com dev",
+    "build": "pnpm -r build"
   },
   "keywords": [],
   "author": "Benjamin Wallberg",

@@ -13,17 +13,6 @@ type SupportGridProps = {
   }[];
 };
 
-function isCodecSupported(
-  result: Result | null,
-  codec: string
-): boolean | undefined {
-  return result?.codecs[codec]?.api.mse || result?.codecs[codec]?.api.htmlVideoElement;
-}
-
-function isDrmSupported(result?: ResultDrm[]) {
-  return result?.some((drm) => drm.supported);
-}
-
 export function SupportGrid(props: SupportGridProps) {
   const support = useSignal<Result | null>(null);
   useEffect(() => {
@@ -56,11 +45,9 @@ export function SupportGrid(props: SupportGridProps) {
         {props.codecs.map((codec) => (
           <Card
             header={codec.title}
-            supportedCodec={isCodecSupported(support.value, codec.type)}
-            supportedDrm={isDrmSupported(support.value?.codecs[codec.type]?.drm)}
+            support={support.value?.codecs[codec.type]}
           />
         ))}
-        {/* <Card supported={true}></Card> */}
       </div>
     </div>
   );

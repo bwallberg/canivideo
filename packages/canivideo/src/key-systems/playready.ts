@@ -24,13 +24,13 @@ export async function isPlayreadySupported({
           keySystem,
           contentType,
           encryption,
-          level
+          level,
         );
         return {
           name: level,
           supported,
         };
-      })
+      }),
     )
   )
     .map((settled) => {
@@ -42,6 +42,7 @@ export async function isPlayreadySupported({
     .filter((level): level is ResultDrm["securityLevels"][number] => !!level);
 
   return {
+    keySystem,
     supported: securityLevels.some((level) => level.supported),
     securityLevels,
   };

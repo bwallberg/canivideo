@@ -1,14 +1,22 @@
 import styles from "./card.module.css";
 import { useEffect, useRef } from "preact/hooks";
 import { NotSupported, Supported, Unknown } from "./icons/icons";
+import { Result, ResultApi, ResultDrm } from "canivideo";
 
 type CardProps = {
   header: string;
-  supportedCodec?: boolean;
-  supportedDrm?: boolean;
+  support?: Result["codecs"][string];
 };
 
-export function Card({ header, supportedCodec, supportedDrm }: CardProps) {
+function isCodecSupported(api: ResultApi): boolean | undefined {
+  return api.mse || api.htmlVideoElement;
+}
+
+function isDrmSupported(result?: ResultDrm[]) {
+  return result?.some((drm) => drm.supported);
+}
+
+export function Card({ header, support }: CardProps) {
   const modalRef = useRef<HTMLDialogElement>();
 
   useEffect(() => {
@@ -17,23 +25,25 @@ export function Card({ header, supportedCodec, supportedDrm }: CardProps) {
     };
 
     modalRef.current?.addEventListener("click", handleClose);
+    modalRef.current?.addEventListener("keydown", handleClose);
     return () => {
+      modalRef.current?.removeEventListener("keydown", handleClose);
       modalRef.current?.removeEventListener("click", handleClose);
     };
   }, []);
 
   return (
     <>
-      <div
+      <button
         className={styles.card}
         onClick={() => modalRef.current?.showModal()}
       >
         <div className={styles.supportTypes}>
           <span className={styles.label}>{header}</span>
           <span className={styles.support}>
-            {supportedCodec === undefined ? (
+            {support === undefined ? (
               <Unknown />
-            ) : supportedCodec ? (
+            ) : isCodecSupported(support.api) ? (
               <Supported />
             ) : (
               <NotSupported />
@@ -43,34 +53,59 @@ export function Card({ header, supportedCodec, supportedDrm }: CardProps) {
         <div className={styles.supportTypes}>
           <span className={styles.label}>DRM</span>
           <span className={styles.support}>
-            {supportedDrm === undefined ? (
+            {support === undefined ? (
               <Unknown />
-            ) : supportedDrm ? (
+            ) : isDrmSupported(support.drm) ? (
               <Supported />
             ) : (
               <NotSupported />
             )}
           </span>
         </div>
-      </div>
+      </button>
       <dialog className={styles.dialog} ref={modalRef}>
         <h2>{header}</h2>
-        <table>
+        <table className={styles.supportTable}>
           <thead>
             <tr>
-              <th>Key System</th>
+              <th>API</th>
               <th>Supported</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Widevine</td>
-              <td>{supportedDrm ? "Yes" : "No"}</td>
+              <td>MSE</td>
+              <td>{support?.api.mse ? "Yes" : "No"}</td>
             </tr>
             <tr>
-              <td>PlayReady</td>
-              <td>{supportedDrm ? "Yes" : "No"}</td>
+              <td>HTMLVideoElement</td>
+              <td>{support?.api.htmlVideoElement ? "Yes" : "No"}</td>
             </tr>
+          </tbody>
+        </table>
+        <table className={styles.supportTable}>
+          <thead>
+            <tr>
+              <th>Key System</th>
+              <th>Supported</th>
+              <th>Security Levels</th>
+            </tr>
+          </thead>
+          <tbody>
+            {support?.drm.map((drm) => (
+              <tr>
+                <td>{drm.keySystem}</td>
+                <td>{drm.supported ? "Yes" : "No"}</td>
+                <td>
+                  {drm.securityLevels
+                    .map(
+                      (level) =>
+                        `${level.name} ${level.supported ? "✅" : "🚫"}`,
+                    )
+                    .join(" - ")}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </dialog>

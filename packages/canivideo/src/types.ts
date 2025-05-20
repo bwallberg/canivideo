@@ -19,9 +19,10 @@ export type EncryptionScheme = "cenc" | "cbcs" | "cbcs-1-9";
 export type Drm = {
   keySystem: KeySystem;
   encryption: EncryptionScheme;
-}
+};
 
 export type ResultDrm = {
+  keySystem: KeySystem;
   supported: boolean;
   securityLevels: {
     name: string;
@@ -29,15 +30,17 @@ export type ResultDrm = {
   }[];
 };
 
+export type ResultApi = {
+  mse: boolean;
+  htmlVideoElement: boolean;
+};
+
 export type Result = {
   supported: boolean;
   codecs: {
     [key: string]: {
-      api: {
-        mse: boolean;
-        htmlVideoElement: boolean;
-      },
-      drm: ResultDrm[]
+      api: ResultApi;
+      drm: ResultDrm[];
     };
   };
 };

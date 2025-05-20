@@ -17,13 +17,14 @@ export async function isWidevineSupported({
             "com.widevine.alpha",
             contentType,
             encryption,
-            robustness
-          ).then((supported) => (supported ? robustness : null))
-      )
+            robustness,
+          ).then((supported) => (supported ? robustness : null)),
+      ),
     )
   ).filter((robustness) => !!robustness);
 
   return {
+    keySystem: "com.widevine.alpha",
     supported: supportedRobustness.length > 0,
     securityLevels: [
       {
