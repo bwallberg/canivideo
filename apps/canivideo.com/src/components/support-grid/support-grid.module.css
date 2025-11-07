@@ -1,10 +1,10 @@
 .support-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 
     gap: 1rem;
     width: 90%;
-    max-width: 60rem;
 }
 
 .support-header {

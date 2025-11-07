@@ -46,6 +46,7 @@
 
 .support-encryptions {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.4rem;
 }
 
@@ -56,8 +57,4 @@
 
   padding: 0.6rem;
   gap: 0.4rem;
-  border-right: 0.1rem solid var(--nord4);
-  &:last-child {
-      border-right: none;
-  }
 }
