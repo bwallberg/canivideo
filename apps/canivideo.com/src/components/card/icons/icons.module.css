@@ -1,11 +1,11 @@
 .unknown {
-    color: var(--nord8);
+    color: var(--color-accent-blue);
 }
 
 .supported {
-    color: var(--nord14);
+    color: var(--color-status-success);
 }
 
 .not-supported {
-    color: var(--nord11);
+    color: var(--color-status-error);
 }

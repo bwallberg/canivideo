@@ -1,0 +1,39 @@
+.themeSwitcher {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+}
+
+.label {
+    font-weight: 500;
+    color: var(--color-text-primary);
+}
+
+.select {
+    padding: 0.5rem 0.75rem;
+    border: 0.1rem solid var(--color-border);
+    border-radius: 0.4rem;
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.select:hover {
+    background-color: var(--color-bg-tertiary);
+    border-color: var(--color-accent-blue);
+}
+
+.select:focus {
+    outline: none;
+    border-color: var(--color-accent-blue);
+    box-shadow: 0 0 0 0.2rem rgba(136, 192, 208, 0.2);
+}
+
+.select option {
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+}

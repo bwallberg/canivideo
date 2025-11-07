@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
 
-  border: 0.1rem solid var(--nord4);
+  border: 0.1rem solid var(--color-border);
   border-radius: 0.6rem;
 }
 
@@ -14,7 +14,7 @@
   align-items: center;
 
   padding: 0.6rem;
-  border-bottom: 0.1rem solid var(--nord4);
+  border-bottom: 0.1rem solid var(--color-border);
 }
 
 .label {
@@ -28,7 +28,7 @@
     width: 100%;
     white-space: nowrap;
 
-    border-bottom: 0.1rem solid var(--nord4);
+    border-bottom: 0.1rem solid var(--color-border);
 
     &:last-child {
         border-bottom: none;
@@ -41,7 +41,7 @@
   align-items: center;
 
   padding: 0.6rem;
-  border-right: 0.1rem solid var(--nord4);
+  border-right: 0.1rem solid var(--color-border);
 }
 
 .support-encryptions {

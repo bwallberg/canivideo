@@ -1,7 +1,7 @@
 import { Container } from "canivideo";
 import styles from "./app.module.css";
-import { Card } from "./components/card/Card";
 import { SupportGrid } from "./components/support-grid/SupportGrid";
+import { ThemeSwitcher } from "./components/theme-switcher";
 
 const VideoContainers: {
   title: string;
@@ -57,6 +57,7 @@ export function App() {
       <footer className={styles.footer}>
         made with ♥ by <a href="https://bwallberg.com">bwallberg</a>
       </footer>
+      <ThemeSwitcher />
     </div>
   );
 }
