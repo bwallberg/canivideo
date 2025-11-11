@@ -1,3 +1,4 @@
+import { getContentType } from "./codec";
 import { isFairplaySupported } from "./key-systems/fairplay";
 import { isPlayreadySupported } from "./key-systems/playready";
 import { isWidevineSupported } from "./key-systems/widevine";

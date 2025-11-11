@@ -2,19 +2,20 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 
   border: 0.1rem solid var(--color-border);
   border-radius: 0.6rem;
 }
 
-.support-codec {
+.support-header {
   display: flex;
-  width: 100%;
   justify-content: space-between;
   align-items: center;
 
+  gap: 0.4rem;
+  width: 100%;
   padding: 0.6rem;
-  border-bottom: 0.1rem solid var(--color-border);
 }
 
 .label {
@@ -28,10 +29,10 @@
     width: 100%;
     white-space: nowrap;
 
-    border-bottom: 0.1rem solid var(--color-border);
+    border-top: 0.1rem solid var(--color-border);
 
-    &:last-child {
-        border-bottom: none;
+    &.not-supported {
+        opacity: 0.5;
     }
 }
 

@@ -1,6 +1,8 @@
+import { useEffect } from "preact/hooks";
 import styles from "./card.module.css";
 import { NotSupported, Supported, Unknown } from "./icons/icons";
 import { KeySystem, Result, ResultApi, ResultDrm } from "canivideo";
+import { useSignal } from "@preact/signals";
 
 type CardProps = {
   header: string;
@@ -10,6 +12,7 @@ type CardProps = {
 const keySystemLabels: Record<KeySystem, string> = {
   "com.widevine.alpha": "Widevine",
   "com.microsoft.playready": "PlayReady",
+  "com.microsoft.playready.recommendation": "PlayReady Recommendation",
   "com.apple.fps": "FairPlay",
 };
 
@@ -17,21 +20,46 @@ function isCodecSupported(api: ResultApi): boolean | undefined {
   return api.mse || api.htmlVideoElement;
 }
 
-export function Card({ header, support }: CardProps) {
-  // Merge DRMs with the same key system
-  //
-  const drmMap = new Map<string, Map<string, boolean>>();
+type KeySystemSupport = {
+  keySystem: KeySystem;
+  supported: boolean;
+  encryptions: {
+    encryption: string;
+    supported: boolean;
+  }[];
+};
 
-  support?.drm.forEach((drm) => {
-    if (!drmMap.has(drm.keySystem)) {
-      drmMap.set(drm.keySystem, new Map());
+export function Card({ header, support }: CardProps) {
+  const keySystems = useSignal<Map<KeySystem, KeySystemSupport>>(new Map())
+
+  useEffect(() => {
+    const result = new Map<KeySystem, KeySystemSupport>();
+    for (const drm of support?.drm || []) {
+      if (!result.has(drm.keySystem)) {
+        result.set(drm.keySystem, {
+          keySystem: drm.keySystem,
+          supported: drm.supported,
+          encryptions: []
+        });
+      }
+
+      const keySystem = result.get(drm.keySystem);
+      if (!keySystem) {
+        continue;
+      }
+
+      keySystem.supported = keySystem.supported ? keySystem.supported : drm.supported
+      keySystem.encryptions.push({
+        encryption: drm.encryption,
+        supported: drm.supported
+      });
     }
-    drmMap.get(drm.keySystem)!.set(drm.encryption, drm.supported);
-  });
+    keySystems.value = result;
+  }, [support]);
 
   return (
     <div className={styles.card}>
-      <div className={styles.supportCodec}>
+      <div className={styles.supportHeader}>
         <span className={styles.label}>{header}</span>
         <span className={styles.support}>
           {support === undefined ? (
@@ -44,15 +72,15 @@ export function Card({ header, support }: CardProps) {
         </span>
       </div>
       {
-        Array.from(drmMap.entries()).map(([keySystem, encryptions]) => (
-          <div className={`${styles.drmRow} ${styles.supported}`}>
+        Array.from(keySystems.value.entries()).map(([_, ks]) => (
+          <div className={`${styles.drmRow} ${ ks.supported ? styles.supported : styles.notSupported}`}>
             <div className={`${styles.supportKeySystem}`}>
-              <span className={styles.label}>{keySystemLabels[keySystem]}</span>
+              <span className={styles.label}>{keySystemLabels[ks.keySystem]}</span>
             </div>
             <div className={styles.supportEncryptions}>
-              {Array.from(encryptions.entries()).map(([enc, supported]) => (
+              {ks.encryptions.map(({ encryption, supported }) => (
                 <div className={styles.supportEncryption}>
-                  <span className={styles.label}>{enc}</span>
+                  <span className={styles.label}>{encryption}</span>
                   <span className={styles.support}>
                     {supported ? <Supported /> : <NotSupported />}
                   </span>

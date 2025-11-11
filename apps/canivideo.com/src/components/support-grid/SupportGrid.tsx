@@ -30,12 +30,10 @@ export function SupportGrid(props: SupportGridProps) {
         { keySystem: "com.apple.fps", encryption: "cbcs" },
       ],
       strict: false,
-    })
-      .then((result) => {
-        if (cancelled) return;
-        support.value = result;
-      })
-      .then(() => {});
+    }).then((result) => {
+      if (cancelled) return;
+      support.value = result;
+    });
 
     return () => {
       cancelled = true;

@@ -2,6 +2,7 @@ import { Container } from "canivideo";
 import styles from "./app.module.css";
 import { SupportGrid } from "./components/support-grid/SupportGrid";
 import { ThemeSwitcher } from "./components/theme-switcher";
+import { SupportGridManifest } from "./components/support-grid/SupportGridManifest";
 
 const VideoContainers: {
   title: string;
@@ -15,10 +16,6 @@ const VideoContainers: {
     title: "video - webm",
     type: "video/webm",
   },
-  {
-    title: "video - hls",
-    type: "application/vnd.apple.mpegurl",
-  },
 ];
 
 export function App() {
@@ -28,6 +25,10 @@ export function App() {
         <h1>CAN I VIDEO</h1>
       </header>
       <main className={styles.main}>
+        <SupportGridManifest
+          header="manifests"
+          manifests={["application/vnd.apple.mpegurl", "application/dash+xml"]}
+        />
         {VideoContainers.map((container) => (
           <SupportGrid
             header={container.title}

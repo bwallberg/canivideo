@@ -1,9 +1,5 @@
-export type Container =
-  | "video/mp4"
-  | "audio/mp4"
-  | "video/webm"
-  | "application/vnd.apple.mpegurl"
-  | string;
+export type Manifest = "application/vnd.apple.mpegurl" | "application/dash+xml";
+export type Container = "video/mp4" | "audio/mp4" | "video/webm" | string;
 
 export type KeySystemPlayReady =
   | "com.microsoft.playready"
