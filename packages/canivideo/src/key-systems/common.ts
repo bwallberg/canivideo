@@ -10,14 +10,22 @@ export function isKeySystemSupported(
     return navigator
       .requestMediaKeySystemAccess(keySystem, [
         {
-          initDataTypes: ['cenc', 'sinf', 'skd', 'keyids'],
-          videoCapabilities: [
+          initDataTypes: ['cenc', 'sinf' , 'skd', 'keyids'],
+          // TODO: have a more robust way of determining video vs audio capabilities
+          videoCapabilities: contentType.includes("video/") ? [
             {
               contentType,
               robustness,
               encryptionScheme: encryption,
             },
-          ],
+          ] : undefined,
+          audioCapabilities: contentType.includes("audio/") ? [
+            {
+              contentType,
+              robustness,
+              encryptionScheme: encryption,
+            },
+          ] : undefined,
         },
       ])
       .then((access) => access.createMediaKeys())
