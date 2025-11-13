@@ -16,6 +16,10 @@ const VideoContainers: {
     title: "video - webm",
     type: "video/webm",
   },
+  {
+    title: "video - matroska",
+    type: "video/matroska",
+  }
 ];
 
 export function App() {
@@ -37,6 +41,8 @@ export function App() {
               { title: "H.264", type: "avc1.42E01E" },
               { title: "H.265/HEVC | hvc1", type: "hvc1.1.6.L93.90" },
               { title: "H.265/HEVC | hev1", type: "hev1.1.6.L93.90" },
+              { title: "VP8", type: "vp8" },
+              { title: "VP9", type: "vp9" },
               { title: "AV1 | 8 bits", type: "av01.0.00M.08" },
               { title: "AV1 | 10 bits", type: "av01.0.00M.10" },
               { title: "AV1 | 12 bits", type: "av01.0.00M.12" },
