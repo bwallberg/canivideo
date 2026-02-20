@@ -1,6 +1,6 @@
 import { Container } from "../types";
 
-type WebCodecsSupport = {
+export type WebCodecsSupport = {
   encoder: {
     hardware?: boolean;
     software: boolean;

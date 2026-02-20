@@ -1,5 +1,12 @@
+import { WebCodecsSupport } from "./apis/web-codecs";
+
 export type Manifest = "application/vnd.apple.mpegurl" | "application/dash+xml";
-export type Container = "video/mp4" | "video/matroska" | "video/webm" | "audio/mp4" | string;
+export type Container =
+  | "video/mp4"
+  | "video/matroska"
+  | "video/webm"
+  | "audio/mp4"
+  | string;
 
 export type KeySystemPlayReady =
   | "com.microsoft.playready"
@@ -30,6 +37,7 @@ export type ResultDrm = {
 export type ResultApi = {
   mse: boolean;
   htmlVideoElement: boolean;
+  webCodecs: WebCodecsSupport;
 };
 
 export type Result = {
