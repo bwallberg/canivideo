@@ -1,7 +1,7 @@
 import { getContentType, isCodecSupported } from "./codec";
 import { isDrmSupported } from "./drm";
 import { isManifestSupported } from "./manifest";
-import { Container, Drm, Manifest,  Result } from "./types";
+import { Container, Drm, Manifest, Result } from "./types";
 
 export * from "./types";
 
@@ -25,19 +25,18 @@ export async function canivideo(options: CanivideoOptions): Promise<Result> {
     codecs: {},
   };
   for (const codec of options.codecs) {
-    const api = isCodecSupported(options.container, codec);
+    const api = await isCodecSupported(options.container, codec);
     if (api.htmlVideoElement === false && api.mse === false) {
       result.codecs[codec] = {
         api,
         drm: [],
-      }
+      };
       continue;
     }
     const drm = await Promise.all(
-      options.drm.map(
-        (drm) =>
-          isDrmSupported(drm, getContentType(options.container, codec))
-      )
+      options.drm.map((drm) =>
+        isDrmSupported(drm, getContentType(options.container, codec)),
+      ),
     );
     result.codecs[codec] = {
       api,

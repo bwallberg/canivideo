@@ -1,16 +1,17 @@
+import { isCodecSupportedMediaSource } from "./apis/media-source";
+import { isCodecSupportedHtmlVideoElement } from "./apis/html";
 import { Container } from "./types";
+import { isCodecSupportedWebCodecs } from "./apis/web-codecs";
 
 export function getContentType(container: Container, codec: string) {
   return `${container}; codecs="${codec}"`;
 }
 
-const htmlVideoElement = document.createElement("video");
-export function isCodecSupported(container: Container, codec: string) {
+export async function isCodecSupported(container: Container, codec: string) {
   return {
-    mse: window.MediaSource?.isTypeSupported(getContentType(container, codec)),
+    mse: isCodecSupportedMediaSource(container, codec),
     // "maybe" or "probably" are considered supported so we cast to boolean
-    htmlVideoElement: !!htmlVideoElement.canPlayType(
-      getContentType(container, codec)
-    ),
+    htmlVideoElement: isCodecSupportedHtmlVideoElement(container, codec),
+    webCodecs: await isCodecSupportedWebCodecs(container, codec),
   };
 }
