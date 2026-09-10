@@ -1,8 +1,7 @@
 .card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  align-items: stretch;
 
   border: 0.1rem solid var(--color-border);
   border-radius: 0.6rem;
@@ -13,6 +12,7 @@
   justify-content: space-between;
   align-items: center;
 
+  grid-column: 1 / -1;
   gap: 0.4rem;
   width: 100%;
   padding: 0.6rem;
@@ -22,33 +22,45 @@
   font-weight: bold;
 }
 
+/* Rows render their children directly into the card grid so the key system
+   column shares a width across all rows. */
 .drm-row {
-    display: flex;
-    flex-direction: row;
+  display: contents;
+  white-space: nowrap;
 
-    width: 100%;
-    white-space: nowrap;
-
+  & > * {
     border-top: 0.1rem solid var(--color-border);
+  }
 
-    &.not-supported {
-        opacity: 0.5;
-    }
+  &.not-supported > * {
+    opacity: 0.5;
+  }
 }
 
 .support-key-system {
   display: flex;
-  justify-content: space-between;
   align-items: center;
 
+  gap: 0.4rem;
   padding: 0.6rem;
   border-right: 0.1rem solid var(--color-border);
 }
 
+.security-level {
+  font-size: 0.75rem;
+  font-weight: bold;
+  line-height: 1;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.3rem;
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-tertiary);
+}
+
 .support-encryptions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .support-encryption {
