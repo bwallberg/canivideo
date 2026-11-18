@@ -1,6 +1,5 @@
 import {
   EncryptionScheme,
-  KeySystem,
   KeySystemPlayReady,
   ResultDrm,
 } from "../types";
@@ -17,6 +16,22 @@ export async function isPlayreadySupported({
   keySystem,
   encryption,
 }: GetPlayreadyOptions): Promise<ResultDrm> {
+  if (keySystem === "com.microsoft.playready") {
+    // Legacy PlayReady can ignore the requested robustness.
+    const supported = await isKeySystemSupported(
+      keySystem,
+      contentType,
+      encryption,
+    );
+
+    return {
+      keySystem,
+      encryption,
+      supported,
+      securityLevels: [{ name: "unknown", label: "Unknown", supported }],
+    };
+  }
+
   const securityLevels = (
     await Promise.allSettled(
       ["3000", "2000", "150"].map(async (level) => {
@@ -28,6 +43,7 @@ export async function isPlayreadySupported({
         );
         return {
           name: level,
+          label: `SL${level}`,
           supported,
         };
       }),
@@ -39,7 +55,7 @@ export async function isPlayreadySupported({
       }
       return settled.value;
     })
-    .filter((level): level is ResultDrm["securityLevels"][number] => !!level);
+    .filter((level) => level !== undefined);
 
   return {
     keySystem,

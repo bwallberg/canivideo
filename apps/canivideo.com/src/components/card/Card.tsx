@@ -15,16 +15,6 @@ const keySystemLabels: Record<KeySystem, string> = {
   "com.apple.fps": "FairPlay",
 };
 
-function securityLevelLabel(keySystem: KeySystem, level: string): string {
-  switch (keySystem) {
-    case "com.microsoft.playready":
-    case "com.microsoft.playready.recommendation":
-      return `SL${level}`;
-    default:
-      return level;
-  }
-}
-
 function isCodecSupported(api: ResultApi): boolean | undefined {
   return api.mse || api.htmlVideoElement;
 }
@@ -51,16 +41,18 @@ function groupDrmRows(drm: ResultDrm[]): DrmRow[] {
 
   const addEntry = (
     keySystem: KeySystem,
-    securityLevel: string | undefined,
+    securityLevel: ResultDrm["securityLevels"][number] | undefined,
     encryption: string,
     supported: boolean,
   ) => {
-    const key = securityLevel ? `${keySystem}:${securityLevel}` : keySystem;
+    const key = securityLevel ? `${keySystem}:${securityLevel.name}` : keySystem;
     let row = perLevel.get(key);
     if (!row) {
       row = {
         keySystem,
-        securityLevels: securityLevel ? [securityLevel] : [],
+        securityLevels: securityLevel
+          ? [securityLevel.label ?? securityLevel.name]
+          : [],
         supported: false,
         encryptions: [],
       };
@@ -76,7 +68,7 @@ function groupDrmRows(drm: ResultDrm[]): DrmRow[] {
       continue;
     }
     for (const level of result.securityLevels) {
-      addEntry(result.keySystem, level.name, result.encryption, level.supported);
+      addEntry(result.keySystem, level, result.encryption, level.supported);
     }
   }
 
@@ -124,9 +116,7 @@ export function Card({ header, support }: CardProps) {
             <span className={styles.label}>{keySystemLabels[row.keySystem]}</span>
             {row.securityLevels.length > 0 && (
               <span className={styles.securityLevel}>
-                {row.securityLevels
-                  .map((level) => securityLevelLabel(row.keySystem, level))
-                  .join(", ")}
+                {row.securityLevels.join(", ")}
               </span>
             )}
           </div>

@@ -23,6 +23,7 @@ export type ResultDrm = {
   supported: boolean;
   securityLevels: {
     name: string;
+    label?: string;
     supported: boolean;
   }[];
 };
